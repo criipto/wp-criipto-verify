@@ -1,0 +1,73 @@
+#criipto-setting-content {
+    font-family: "Raleway", sans-serif;
+    margin-left: -20px;
+    margin-top: 0;
+    width: calc(100% + 20px);
+    background-color: white;
+}
+
+.criipto-header {
+    text-align: center;
+}
+
+.criipto-header-border {
+    padding: 40px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    width: 80%;
+}
+
+.criipto-content {
+    position: relative;
+    margin: 0 auto;
+    width: 50%;
+    
+}
+.criipto-content form{
+    padding-bottom: 200px;
+}
+.criipto-content h1 {
+    padding-top: 40px;
+    text-align: left;
+}
+
+.criipto-content table {
+    border-spacing: 0 40px;
+}
+
+.criipto-content input[type='text'],
+.criipto-content input[type='password'],
+.criipto-content input[type='number'] {
+    width: 93%;
+}
+
+.criipt-readonly-url {
+    position: absolute;
+    right: 20px;
+    margin-top: 20px;
+    width: 290px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.02);
+    /* border: 1px solid; */
+}
+
+.criipt-readonly-url table {
+    text-align: left;
+}
+
+.criipto-content input[type=number]::-webkit-inner-spin-button,
+.criipto-content input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#criipto-client-secret {
+    display: inline-block;
+}
+
+.criipto-toggle-secret {
+    cursor: pointer;
+    width: 5%;
+    display: inline-block;
+
+}
