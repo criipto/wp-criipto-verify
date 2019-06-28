@@ -16,7 +16,7 @@ jQuery(function ($) {
         }
     }, false);
     
-    $('#criipto-signout').click(function () {
-        window.location = '/wp-content/plugins/criipto-verify/openIdConnect.php?signout=true';
+    $('#criipto-verify-signout').click(function () {
+        window.location = '/wp-content/plugins/wp-criipto-verify/openIdConnect.php?signout=true';
     });
 })

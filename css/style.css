@@ -1,39 +1,39 @@
-.login-frame-central {
+#criipto-verify-login .login-frame-central {
     width: 500px;
     height: 300px;
     border: 0
 }
 
-.login-frame-mobile {
+#criipto-verify-login .login-frame-mobile {
     width: 388px;
     height: 240px;
     border: 0
 }
 
-.login-frame-sbid {
+#criipto-verify-login .login-frame-sbid {
     width: 600px;
     height: 300px;
     border: 0
 }
 
-.login-frame-local {
+#criipto-verify-login .login-frame-local {
     width: 600px;
     height: 300px;
     border: 0
 }
 
-.login-frame-poces,
-.login-frame-moces {
+#criipto-verify-login .login-frame-poces,
+#criipto-verify-login .login-frame-moces {
     width: 320px;
     height: 465px
 }
 
-.login-frame-codefile {
+#criipto-verify-login .login-frame-codefile {
     width: 100%;
     height: 454px
 }
 
-#criipto-signout {
+#criipto-verify-signout {
     background-color: white;
     border:1px solid;
     padding: 5px;
@@ -41,7 +41,7 @@
     cursor: pointer;
 }
 
-.criipto-error {
+.criipto-verify-error {
     background-color: #f44336;
     padding-left: 10px;
     color: #fff;

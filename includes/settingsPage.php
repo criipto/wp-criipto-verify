@@ -1,59 +1,52 @@
 <?php
-function setWellKnown()
+function criipto_verify_setWellKnown()
 {
-
-    $isDeveloperMode  = $_SERVER['SERVER_NAME'] != 'localhost';
-    $arrContextOptions = array(
-        "ssl" => array(
-            "verify_peer" => $isDeveloperMode,
-            "verify_peer_name" => $isDeveloperMode,
-        ),
-    );
-    return file_get_contents("https://easyid.www.grean.id/.well-known/openid-configuration", false, stream_context_create($arrContextOptions));
+    $response = wp_remote_get("https://" . get_option('criipto-verify-domain') . "/.well-known/openid-configuration");
+    return wp_remote_retrieve_body( $response );
 }
 
-add_action('setSessionWellKnown', 'setWellKnown');
+add_action('setSessionWellKnown', 'criipto_verify_setWellKnown');
 
 /**
  * Register a custom menu page.
  */
-function wpdocs_register_criipto_settings_menu_page()
+function register_criipto_verify_settings_menu_page()
 {
     //add menu and icon
-    add_menu_page('Criipto Settings', 'Criipto Settings', 'administrator', __FILE__, 'criipto_settings_page', MAIN_PLUGIN_URL . 'assets/icon.png');
+    add_menu_page('Criipto Settings', 'Criipto Settings', 'administrator', __FILE__, 'criipto_verify_settings_page', CRIIPTO_VERIFY_MAIN_PLUGIN_URL . 'assets/icon.png');
 
     //call register settings function
-    add_action('admin_init', 'register_criipto_plugin_settings');
+    add_action('admin_init', 'register_criipto_verify_plugin_settings');
 }
-add_action('admin_menu', 'wpdocs_register_criipto_settings_menu_page');
+add_action('admin_menu', 'register_criipto_verify_settings_menu_page');
 
 //register form settings 
-function register_criipto_plugin_settings()
+function register_criipto_verify_plugin_settings()
 {
     $args = array(
         'type' => 'string',
         'sanitize_callback' => 'sanitize_text_field',
         'default' => NULL,
     );
-    register_setting('criipto_settings_group', 'criipto-login-method', $args);
-    register_setting('criipto_settings_group', 'criipto-domain', $args);
-    register_setting('criipto_settings_group', 'criipto-client-id', $args);
-    register_setting('criipto_settings_group', 'criipto-client-secret', $args);
-    register_setting('criipto_settings_group', 'criipto-implicit', $args);
-    register_setting('criipto_settings_group', 'criipto-claims', $args);
-    register_setting('criipto_settings_group', 'criipto-redirect-uri', $args);
-    register_setting('criipto_settings_group', 'criipto-after-logout-redirect', $args);
-    register_setting('criipto_settings_group', 'criipto-admin-port', $args);
-    register_setting('criipto_settings_group', 'criipto-admin-scheme', $args);
-    register_setting('criipto_settings_group', 'criipto-first-install', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-login-method', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-domain', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-client-id', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-client-secret', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-implicit', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-claims', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-redirect-uri', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-after-logout-redirect', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-admin-port', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-admin-scheme', $args);
+    register_setting('criipto_verify_settings_group', 'criipto-verify-first-install', $args);
 }
 
 //Setting page content
-function criipto_settings_page()
+function criipto_verify_settings_page()
 {    
 
-    if (get_option('criipto-first-install') !== 'obsolete'){
-        add_option('criipto-first-install', 'firstInstall');
+    if (get_option('criipto-verify-first-install') !== 'obsolete'){
+        add_option('criipto-verify-first-install', 'firstInstall');
     }
     if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
         $scheme = 'https';
@@ -67,13 +60,13 @@ function criipto_settings_page()
     }
     $parse_url = parse_url((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
     ?>
-    <div id="criipto-setting-content">
-        <div class="criipto-header">
-            <div class="criipto-header-border">
-                <img src="https://criipto.com/images/logo-criipto-dark-3.svg">
+    <div id="criipto-verify-setting-content">
+        <div class="criipto-verify-header">
+            <div class="criipto-verify-header-border">
+                <img src="<?php echo CRIIPTO_VERIFY_MAIN_PLUGIN_URL ?>assets/logo-criipto-dark-3.svg">
             </div>
         </div>
-        <div class="criipt-readonly-url">
+        <div class="criipto-verify-readonly-url">
             <h1>
                 !important: 
             </h1>
@@ -81,23 +74,23 @@ function criipto_settings_page()
             <table>
                 <tr>
                     <th>Callback url</th>
-                    <td><?php echo $parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host'] . MAIN_PLUGIN_URL ?>openIdConnect.php</td>
+                    <td><?php echo esc_url($parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host'] . CRIIPTO_VERIFY_MAIN_PLUGIN_URL) ?>openIdConnect.php</td>
 
                 </tr>
                 <tr>
                     <th>Redirect url after log out</th>
-                    <td><?php echo get_option('criipto-after-logout-redirect') != home_url() ? $parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host'] . '/' . get_option('criipto-after-logout-redirect') : get_option('criipto-after-logout-redirect') ?></td>
+                    <td><?php echo esc_url(get_option('criipto-verify-after-logout-redirect') != home_url() ? $parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host'] . '/' . get_option('criipto-verify-after-logout-redirect') : get_option('criipto-verify-after-logout-redirect')) ?></td>
                 </tr>
             </table>
         </div>
-        <div class="criipto-content">
+        <div class="criipto-verify-content">
             <form method="post" action="options.php">
-                <?php settings_fields('criipto_settings_group'); ?>
-                <?php do_settings_sections('criipto_settings_group'); ?>
-                <input type="hidden" id="criipto-redirect-uri" name="criipto-redirect-uri" value="<?php echo MAIN_PLUGIN_URL ?>openIdConnect.php" />
-                <input type="hidden" id="criipto-admin-port" name="criipto-admin-port" value="<?php echo $port ?>" />
-                <input type="hidden" id="criipto-admin-scheme" name="criipto-admin-scheme" value="<?php echo $scheme ?>" />
-                <input type="hidden" id="criipto-first-install" name="criipto-first-install" value="<?php echo 'obsolete' ?>" />
+                <?php settings_fields('criipto_verify_settings_group'); ?>
+                <?php do_settings_sections('criipto_verify_settings_group'); ?>
+                <input type="hidden" id="criipto-verify-redirect-uri" name="criipto-verify-redirect-uri" value="<?php echo esc_url(CRIIPTO_VERIFY_MAIN_PLUGIN_URL) ?>openIdConnect.php" />
+                <input type="hidden" id="criipto-verify-admin-port" name="criipto-verify-admin-port" value="<?php echo esc_attr($port) ?>" />
+                <input type="hidden" id="criipto-verify-admin-scheme" name="criipto-verify-admin-scheme" value="<?php echo esc_attr($scheme) ?>" />
+                <input type="hidden" id="criipto-verify-first-install" name="criipto-verify-first-install" value="<?php echo esc_textarea('obsolete') ?>" />
                 <h1>Criipto WordPress Plugin Settings</h1>
                 <p>Basic settings related to the Criipto integration.</p>
 
@@ -108,7 +101,7 @@ function criipto_settings_page()
                             *Domain
                         </th>
                         <td>
-                            <input type="text" id="criipto-domain" name="criipto-domain" value="<?php echo esc_attr(get_option('criipto-domain')); ?>" placeholder="*.criipto.id or your own custom domain" />
+                            <input type="text" id="criipto-verify-domain" name="criipto-verify-domain" value="<?php echo esc_attr(get_option('criipto-verify-domain')); ?>" placeholder="*.criipto.id or your own custom domain" />
                         </td>
                     </tr>
                     <tr>
@@ -116,10 +109,10 @@ function criipto_settings_page()
                             *Login Method
                         </th>
                         <td>
-                            <select id="criipto-login-method" name="criipto-login-method">
+                            <select id="criipto-verify-login-method" name="criipto-verify-login-method">
                                 <?php
-                                foreach (json_decode(setWellKnown(), true)['acr_values_supported'] as $acr_value) { ?>
-                                    <option <?php echo get_option('criipto-login-method') == $acr_value || (get_option('criipto-login-method') == false && $acr_value == 'urn:grn:authn:dk:nemid:poces')  ? 'selected' : '' ?> value="<?php echo $acr_value ?>"><?php echo $acr_value ?></option>
+                                foreach (json_decode(criipto_verify_setWellKnown(), true)['acr_values_supported'] as $acr_value) { ?>
+                                    <option <?php echo esc_attr(get_option('criipto-verify-login-method') == $acr_value || (get_option('criipto-verify-login-method') == false && $acr_value == 'urn:grn:authn:dk:nemid:poces')  ? 'selected' : '') ?> value="<?php echo esc_attr($acr_value) ?>"><?php echo esc_attr($acr_value) ?></option>
                                 <?php
                             }
                             ?>
@@ -134,7 +127,7 @@ function criipto_settings_page()
                             *Client Id
                         </th>
                         <td>
-                            <input type="text" id="criipto-client-id" name="criipto-client-id" value="<?php echo esc_attr(get_option('criipto-client-id')); ?>" placeholder="urn:easyid:* or your own custom value" />
+                            <input type="text" id="criipto-verify-client-id" name="criipto-verify-client-id" value="<?php echo esc_attr(get_option('criipto-verify-client-id')); ?>" placeholder="urn:easyid:* or your own custom value" />
                         </td>
 
                     </tr>
@@ -143,7 +136,7 @@ function criipto_settings_page()
                             Redirect page after<br> log out
                         </th>
                         <td>
-                            <input type="text" id="criipto-after-logout-redirect" name="criipto-after-logout-redirect" value="<?php echo esc_attr(get_option('criipto-after-logout-redirect') != '' ? get_option('criipto-after-logout-redirect') : home_url()); ?>" />
+                            <input type="text" id="criipto-verify-after-logout-redirect" name="criipto-verify-after-logout-redirect" value="<?php echo esc_attr(get_option('criipto-verify-after-logout-redirect') != '' ? get_option('criipto-verify-after-logout-redirect') : home_url()); ?>" />
                             <i>
                                 Default is root homepage name<br>
                             </i>
@@ -154,7 +147,7 @@ function criipto_settings_page()
                             Client secret
                         </th>
                         <td>
-                            <input type="password" id="criipto-client-secret" name="criipto-client-secret" value="<?php echo esc_attr(get_option('criipto-client-secret')); ?>" />
+                            <input type="password" id="criipto-verify-client-secret" name="criipto-verify-client-secret" value="<?php echo esc_attr(get_option('criipto-verify-client-secret')); ?>" />
                             <span class="criipto-toggle-secret">Show</span>
                             <script type="text/javascript">
 
@@ -170,7 +163,7 @@ function criipto_settings_page()
                             Show me user information
                         </th>
                         <td>
-                            <input type="checkbox" id="criipto-claims" name="criipto-claims"  value="1" <?php echo get_option('criipto-claims') == "1" || get_option('criipto-first-install') == 'firstInstall' ? "checked" : "" ?> />
+                            <input type="checkbox" id="criipto-verify-claims" name="criipto-verify-claims"  value="1" <?php echo esc_attr(get_option('criipto-verify-claims') == "1" || get_option('criipto-verify-first-install') == 'firstInstall' ? "checked" : "") ?> />
                             <i>For testing purpose, shows you the available user information returned from Criipto Verify</i>
                         </td>
                     </tr>
@@ -179,7 +172,7 @@ function criipto_settings_page()
                             Implicit
                         </th>
                         <td>
-                            <input type="checkbox" id="criipto-implicit" name="criipto-implicit" value="1" <?php echo get_option('criipto-implicit') == "1" ? "checked" : "" ?> />
+                            <input type="checkbox" id="criipto-verify-implicit" name="criipto-verify-implicit" value="1" <?php echo esc_attr(get_option('criipto-verify-implicit') == "1" ? "checked" : "") ?> />
 
                             <i>Return an id token directly. Default is the authorization code flow</i>
                         </td>

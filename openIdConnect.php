@@ -14,7 +14,7 @@ $sessionShortcodeArray = json_decode($_SESSION['shortcode'], true);
 $oidc = new OpenIDConnectClient(
     "https://" . $sessionShortcodeArray['domain'],
     $sessionShortcodeArray['client_id'],
-    get_option('criipto-client-secret')
+    get_option('criipto-verify-client-secret') ? get_option('criipto-verify-client-secret') : ''
 );
 
 //** */
@@ -24,6 +24,7 @@ $oidc->setVerifyHost($isDeveloperMode);
 $oidc->setVerifyPeer($isDeveloperMode);
 
 if (isset($_GET['signout'])) {
+   
     session_destroy();
     $oidc->signOut('', $sessionShortcodeArray['afterLogOutRedirect']);
 } else {
@@ -46,6 +47,6 @@ if (isset($_GET['signout'])) {
         $_SESSION['sessionId'] = session_id();
         echo "<script type='text/javascript' src='js/userLoggedInNotifier.js'></script>";
     } catch (OpenIDConnectClientException $e) {
-        return "<div class='criipto-error'>" . $e . "</div>";
+        return "<div class='criipto-verify-error'>" . $e . "</div>";
     }
 }
