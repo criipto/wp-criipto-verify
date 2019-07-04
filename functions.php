@@ -1,4 +1,8 @@
 <?php
+session_start();
+require __DIR__ . '/vendor/autoload.php';
+use Jumbojett\OpenIDConnectClient;
+
 
 /**
  * Build url after parse url.
@@ -9,14 +13,47 @@ function criipto_verify_build_url(array $parts)
 }
 
 /**
+ * Handle authorize response from Criipto Verify.
+ */
+
+function criipto_verify_openid_connect()
+{
+    $sessionShortcodeArray = json_decode($_SESSION['shortcode'], true);
+
+    $oidc = new OpenIDConnectClient(
+        "https://" . $sessionShortcodeArray['domain'],
+        $sessionShortcodeArray['client_id'],
+        CRIIPTO_VERIFY_CLIENT_SECRET
+    );
+
+    //** */
+    $isDeveloperMode  = $_SERVER['SERVER_NAME'] != 'localhost';
+
+    $oidc->setVerifyHost($isDeveloperMode);
+    $oidc->setVerifyPeer($isDeveloperMode);
+
+    $oidc->setRedirectURL($sessionShortcodeArray['redirect_uri']);
+
+    try {
+        $oidc->authenticate();
+        $_SESSION['VerifiedClaims'] = JSON_encode($oidc->getVerifiedClaims());
+        $_SESSION['sessionId'] = session_id();
+        echo "<script type='text/javascript'>window.parent.location.reload()</script>";
+    } catch (OpenIDConnectClientException $e) {
+        return "<div class='criipto-verify-error'>" . $e . "</div>";
+    }
+}
+
+/**
  * Add iframe to page where shortcode is [criipto].
  */
 
-function criipto_verify_add_iframe($atts)
+function criipto_verify_shortcode($atts)
 {
+
     $response = wp_remote_get("https://" . get_option('criipto-verify-domain') . "/.well-known/openid-configuration");
     if (get_option('criipto-verify-domain') === '' || get_option('criipto-verify-domain') == null) {
-        if (!wp_remote_retrieve_body( $response )) {
+        if (!wp_remote_retrieve_body($response)) {
             return "<div class='criipto-verify-error'>The Criipto Verify domain settings are not provided correctly. Please visit criipto.com/wordpress for how to configure the settings.</div>";;
         }
     }
@@ -31,11 +68,8 @@ function criipto_verify_add_iframe($atts)
 
     $port = get_option('criipto-verify-admin-port') != '' ? get_option('criipto-verify-admin-port') : '';
 
-    $redirectUri = $_SERVER['SERVER_NAME'] . get_option('criipto-verify-redirect-uri');
-    $parsed_redirectUri = parse_url($redirectUri);
-    $port != '' ? $parsed_redirectUri['port'] = ':' . $port : '';
-    $parsed_redirectUri['scheme'] = $authority;
-    $redirectUri = criipto_verify_build_url($parsed_redirectUri);
+    global $wp;
+    $redirectUri = home_url($wp->request);
 
     $afterLogOutRedirect = parse_url(get_option('criipto-verify-after-logout-redirect'))['path'] ? '/' . get_option('criipto-verify-after-logout-redirect') : '';
     $parsed_afterLogOutRedirect = parse_url($afterLogOutRedirect);
@@ -57,34 +91,38 @@ function criipto_verify_add_iframe($atts)
 
     $_SESSION['shortcode'] = json_encode($atts);
     $sessionShortcodeArray = json_decode($_SESSION['shortcode'], true);
-    if (!isset($_SESSION['sessionId'])) {
-        return "
-        <div id='criipto-verify-login'>
-            <iframe src='" . plugins_url('/openIdConnect.php', __FILE__) . "' id='criipto-verify' title='Criipto-Verify' class='login-frame-" . substr($sessionShortcodeArray['acr_values'], strrpos($sessionShortcodeArray['acr_values'], ':') + 1) . "' allowfullscreen='true' scrolling='no' frameborder='0' class='hidden-frame'>
-            </iframe>
-        </div>
-        ";
-    } else if (get_option('criipto-verify-claims') === '1' && isset($_SESSION['sessionId'])) {
-        $array = json_decode($_SESSION['VerifiedClaims']);
-        $rows = '';
-        foreach ($array as $key =>  $value) {
-            $rows .= "<tr><td>" . $key . "</td><td>" . $value . "</td></tr>";
-        }
-        echo "
-        <p id='criipto-verify-signout'>Logout</p>
-        <table>
-            <tr>
-                <th>Type</th>
-                <th>Attribute</th>
-            </tr>
-            " . $rows . "
-        </table>";
+    if ((isset($_GET['code']) && isset($_GET['state'])) || isset($_POST['id_token'])) {
+        criipto_verify_openid_connect();
     } else {
-        return "<p id='criipto-verify-signout'>Logout</p>";
+        if (!isset($_SESSION['sessionId'])) {
+            return "
+            <div id='criipto-verify-login'>
+                <iframe src='" . plugins_url('/requestAuth.php', __FILE__) . "' id='criipto-verify' title='Criipto-Verify' class='login-frame-" . substr($sessionShortcodeArray['acr_values'], strrpos($sessionShortcodeArray['acr_values'], ':') + 1) . "' allowfullscreen='true' scrolling='no' frameborder='0' class='hidden-frame'>
+                </iframe>
+            </div>
+            ";
+        } else if (get_option('criipto-verify-claims') === '1' && isset($_SESSION['sessionId']) && !isset($_GET['code'])) {
+            $array = json_decode($_SESSION['VerifiedClaims']);
+            $rows = '';
+            foreach ($array as $key =>  $value) {
+                $rows .= "<tr><td>" . $key . "</td><td>" . $value . "</td></tr>";
+            }
+            echo "
+            <p id='criipto-verify-signout'>Logout</p>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Attribute</th>
+                </tr>
+                " . $rows . "
+            </table>";
+        } else {
+            return "<p id='criipto-verify-signout'>Logout</p>";
+        }
     }
 }
 
 /**
  * Register the shortcode "criipto" 
  */
-add_shortcode('criipto', 'criipto_verify_add_iframe');
+add_shortcode('criipto', 'criipto_verify_shortcode');

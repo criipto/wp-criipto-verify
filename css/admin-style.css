@@ -20,8 +20,7 @@
 .criipto-verify-content {
     position: relative;
     margin: 0 auto;
-    width: 50%;
-    
+    width: 40vw;
 }
 .criipto-verify-content form{
     padding-bottom: 200px;
@@ -38,14 +37,15 @@
 .criipto-verify-content input[type='text'],
 .criipto-verify-content input[type='password'],
 .criipto-verify-content input[type='number'] {
-    width: 93%;
+    width: 79%;
+    min-width: 285px;
 }
 
 .criipto-verify-readonly-url {
     position: absolute;
     right: 20px;
     margin-top: 20px;
-    width: 290px;
+    width: 20vw;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.02);
     /* border: 1px solid; */
@@ -64,10 +64,11 @@
 #criipto-verify-client-secret {
     display: inline-block;
 }
-
+.criipto-verify-block {
+    display: block;
+}
 .criipto-verify-toggle-secret {
     cursor: pointer;
-    width: 5%;
     display: inline-block;
 
 }

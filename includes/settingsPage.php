@@ -74,7 +74,7 @@ function criipto_verify_settings_page()
             <table>
                 <tr>
                     <th>Callback url</th>
-                    <td><?php echo esc_url($parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host'] . CRIIPTO_VERIFY_MAIN_PLUGIN_URL) ?>openIdConnect.php</td>
+                    <td><?php echo esc_url($parse_url['scheme'] . '://' . $parse_url['port'] . $parse_url['host']) ?>/[Page where your add shortcode]</td>
 
                 </tr>
                 <tr>
@@ -87,7 +87,6 @@ function criipto_verify_settings_page()
             <form method="post" action="options.php">
                 <?php settings_fields('criipto_verify_settings_group'); ?>
                 <?php do_settings_sections('criipto_verify_settings_group'); ?>
-                <input type="hidden" id="criipto-verify-redirect-uri" name="criipto-verify-redirect-uri" value="<?php echo esc_url(CRIIPTO_VERIFY_MAIN_PLUGIN_URL) ?>openIdConnect.php" />
                 <input type="hidden" id="criipto-verify-admin-port" name="criipto-verify-admin-port" value="<?php echo esc_attr($port) ?>" />
                 <input type="hidden" id="criipto-verify-admin-scheme" name="criipto-verify-admin-scheme" value="<?php echo esc_attr($scheme) ?>" />
                 <input type="hidden" id="criipto-verify-first-install" name="criipto-verify-first-install" value="<?php echo esc_textarea('obsolete') ?>" />
@@ -137,7 +136,7 @@ function criipto_verify_settings_page()
                         </th>
                         <td>
                             <input type="text" id="criipto-verify-after-logout-redirect" name="criipto-verify-after-logout-redirect" value="<?php echo esc_attr(get_option('criipto-verify-after-logout-redirect') != '' ? get_option('criipto-verify-after-logout-redirect') : home_url()); ?>" />
-                            <i>
+                            <i class="criipto-verify-block">
                                 Default is root homepage name<br>
                             </i>
                         </td>
@@ -148,11 +147,10 @@ function criipto_verify_settings_page()
                         </th>
                         <td>
                             <input type="password" id="criipto-verify-client-secret" name="criipto-verify-client-secret" value="<?php echo esc_attr(get_option('criipto-verify-client-secret')); ?>" />
-                            <span class="criipto-toggle-secret">Show</span>
+                            <div class="criipto-verify-toggle-secret">Show</div>
                             <script type="text/javascript">
-
                             </script>
-                            <i>
+                            <i class="criipto-verify-block">
                                 Get 'Client secret' from manage.criipto.id
                             </i>
                         </td>

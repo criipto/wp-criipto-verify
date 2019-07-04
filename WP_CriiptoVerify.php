@@ -9,8 +9,8 @@
  * Text Domain: wp-criipto
  */
 session_start();
-$_SESSION['ABSPATH'] = ABSPATH;
 require_once 'functions.php';
+
 include('includes/settingsPage.php'); 
 $pluginUrl = plugin_dir_url(__FILE__);
 $find = array( 'http://', 'https://' );
@@ -19,6 +19,9 @@ $domain = str_replace( $find, $replace, home_url());
 $output = str_replace( $find, $replace, $pluginUrl );
 $url =  str_replace( $domain, $replace, $output );
 define('CRIIPTO_VERIFY_MAIN_PLUGIN_URL', $url);
+define('CRIIPTO_VERIFY_CLIENT_SECRET', get_option('criipto-verify-client-secret'));
+
+
 function criipto_plugin_scripts()
 {
     wp_enqueue_script('jquery');

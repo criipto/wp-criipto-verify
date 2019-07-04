@@ -17,6 +17,6 @@ jQuery(function ($) {
     }, false);
     
     $('#criipto-verify-signout').click(function () {
-        window.location = '/wp-content/plugins/wp-criipto-verify/openIdConnect.php?signout=true';
+        window.location = 'http://localhost/test?signout=true';
     });
 })
