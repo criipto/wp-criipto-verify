@@ -12,7 +12,7 @@ wp-criipto-verify plugin is supported with wordpress <5.2.
 
 ## Cacerts
 
-wp-criipto-verify plugin includes cacert.pem. This is used for getting ssl handshake to work running localhost. This file can be overwritten as desired.
+wp-criipto-verify plugin includes Mozilla's current list of certification authorities in PEM format - taken from https://curl.haxx.se/docs/caextract.html. It is needed for TLS validation when the Jumbojett library makes outgoing HTTPS requests. You can replace it with your own CA list if need be.
 
 ## Installation
 
