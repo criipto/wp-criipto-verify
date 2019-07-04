@@ -10,11 +10,18 @@ $oidc = new OpenIDConnectClient(
     $sessionShortcodeArray['client_id']
 );
 
-//** */
-$isDeveloperMode  = $_SERVER['SERVER_NAME'] != 'localhost';
+/** 
+ * When working on localhost, https connection can fail. As a work around, set setVerifyHost and setVerifyPeer to false when
+ * $_SERVER['SERVER_NAME'] is equal localhost. 
+ */
+if ($_SERVER['SERVER_NAME'] == 'localhost') {
+    $setVerifyAuth = false;
+} else {
+    $setVerifyAuth = true;
+}
 
-$oidc->setVerifyHost($isDeveloperMode);
-$oidc->setVerifyPeer($isDeveloperMode);
+$oidc->setVerifyHost($setVerifyAuth);
+$oidc->setVerifyPeer($setVerifyAuth);
 
 if (isset($_GET['signout'])) {
     session_destroy();
@@ -35,9 +42,6 @@ if (isset($_GET['signout'])) {
     }
     try {
         $oidc->authenticate();
-        // $_SESSION['VerifiedClaims'] = JSON_encode($oidc->getVerifiedClaims());
-        // $_SESSION['sessionId'] = session_id();
-        // echo "<script type='text/javascript' src='js/userLoggedInNotifier.js'></script>";
     } catch (OpenIDConnectClientException $e) {
         return "<div class='criipto-verify-error'>" . $e . "</div>";
     }

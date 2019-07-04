@@ -23,14 +23,21 @@ function criipto_verify_openid_connect()
     $oidc = new OpenIDConnectClient(
         "https://" . $sessionShortcodeArray['domain'],
         $sessionShortcodeArray['client_id'],
-        CRIIPTO_VERIFY_CLIENT_SECRET
+        get_option('criipto-verify-client-secret')
     );
 
-    //** */
-    $isDeveloperMode  = $_SERVER['SERVER_NAME'] != 'localhost';
+    /** 
+    * When working on localhost, https connection can fail. As a work around, set setVerifyHost and setVerifyPeer to false when
+    * $_SERVER['SERVER_NAME'] is equal localhost. 
+    */
+    if($_SERVER['SERVER_NAME'] == 'localhost'){
+        $setVerifyAuth = false;
+    } else {
+        $setVerifyAuth = true;
+    }
 
-    $oidc->setVerifyHost($isDeveloperMode);
-    $oidc->setVerifyPeer($isDeveloperMode);
+    $oidc->setVerifyHost($setVerifyAuth);
+    $oidc->setVerifyPeer($setVerifyAuth);
 
     $oidc->setRedirectURL($sessionShortcodeArray['redirect_uri']);
 
@@ -108,7 +115,7 @@ function criipto_verify_shortcode($atts)
                 $rows .= "<tr><td>" . $key . "</td><td>" . $value . "</td></tr>";
             }
             echo "
-            <p id='criipto-verify-signout'>Logout</p>
+            <a id='criipto-verify-signout' href='" . plugins_url('/requestAuth.php', __FILE__) . "?signout=true'>Logout</a>
             <table>
                 <tr>
                     <th>Type</th>
