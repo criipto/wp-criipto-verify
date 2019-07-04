@@ -1,0 +1,53 @@
+#criipto-verify-login .login-frame-central {
+    width: 500px;
+    height: 300px;
+    border: 0
+}
+
+#criipto-verify-login .login-frame-mobile {
+    width: 388px;
+    height: 240px;
+    border: 0
+}
+
+#criipto-verify-login .login-frame-sbid {
+    width: 600px;
+    height: 300px;
+    border: 0
+}
+
+#criipto-verify-login .login-frame-local {
+    width: 600px;
+    height: 300px;
+    border: 0
+}
+
+#criipto-verify-login .login-frame-poces,
+#criipto-verify-login .login-frame-moces {
+    width: 320px;
+    height: 465px
+}
+
+#criipto-verify-login .login-frame-codefile {
+    width: 100%;
+    height: 454px
+}
+
+#criipto-verify-signout {
+    background-color: white;
+    border:1px solid;
+    padding: 5px;
+    float: right;
+    cursor: pointer;
+}
+
+.criipto-verify-error {
+    background-color: #f44336;
+    padding-left: 10px;
+    color: #fff;
+    top:0;
+    left:0;
+    width: 100%;
+    position: absolute;
+    z-index: 999999999;
+}

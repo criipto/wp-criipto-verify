@@ -1,0 +1,74 @@
+#criipto-verify-setting-content {
+    font-family: "Raleway", sans-serif;
+    margin-left: -20px;
+    margin-top: 0;
+    width: calc(100% + 20px);
+    background-color: white;
+}
+
+.criipto-verify-header {
+    text-align: center;
+}
+
+.criipto-verify-header-border {
+    padding: 40px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    width: 80%;
+}
+
+.criipto-verify-content {
+    position: relative;
+    margin: 0 auto;
+    width: 40vw;
+}
+.criipto-verify-content form{
+    padding-bottom: 200px;
+}
+.criipto-verify-content h1 {
+    padding-top: 40px;
+    text-align: left;
+}
+
+.criipto-verify-content table {
+    border-spacing: 0 40px;
+}
+
+.criipto-verify-content input[type='text'],
+.criipto-verify-content input[type='password'],
+.criipto-verify-content input[type='number'] {
+    width: 79%;
+    min-width: 285px;
+}
+
+.criipto-verify-readonly-url {
+    position: absolute;
+    right: 20px;
+    margin-top: 20px;
+    width: 20vw;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.02);
+    /* border: 1px solid; */
+}
+
+.criipto-verify-readonly-url table {
+    text-align: left;
+}
+
+.criipto-verify-content input[type=number]::-webkit-inner-spin-button,
+.criipto-verify-content input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#criipto-verify-client-secret {
+    display: inline-block;
+}
+.criipto-verify-block {
+    display: block;
+}
+.criipto-verify-toggle-secret {
+    cursor: pointer;
+    display: inline-block;
+
+}
