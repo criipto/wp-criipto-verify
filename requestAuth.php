@@ -10,18 +10,7 @@ $oidc = new OpenIDConnectClient(
     $sessionShortcodeArray['client_id']
 );
 
-/** 
- * When working on localhost, https connection can fail. As a work around, set setVerifyHost and setVerifyPeer to false when
- * $_SERVER['SERVER_NAME'] is equal localhost. 
- */
-if ($_SERVER['SERVER_NAME'] == 'localhost') {
-    $setVerifyAuth = false;
-} else {
-    $setVerifyAuth = true;
-}
-
-$oidc->setVerifyHost($setVerifyAuth);
-$oidc->setVerifyPeer($setVerifyAuth);
+$oidc->setCertPath($_SESSION['cacerts']);
 
 if (isset($_GET['signout'])) {
     session_destroy();

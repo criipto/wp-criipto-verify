@@ -12,6 +12,9 @@ License URI: https://www.criipto.com/licenses/gpl-2.0.html
 == Description ==
 wp-criipto-verify is an wordpress plugin that provides login for DK NemId, NO/SE BankId, FI Tupas, FI Mobiilivarmenne, FI All for all your sites.
 
+== Cacerts ==
+wp-criipto-verify plugin includes cacert.pem. This is used for getting ssl handshake to work running localhost. This file can be overwritten as desired. 
+
 == Installation ==
 
 1. Download or clone this repository to the plugin folder in your wordpress project. Typicaly "[wordpress project name]"/wp-content/plugins.

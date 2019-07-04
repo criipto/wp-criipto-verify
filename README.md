@@ -10,6 +10,10 @@ You'll need to install wordpress. Guide to isntall wordpress [Install Wordpress]
 
 wp-criipto-verify plugin is supported with wordpress <5.2.
 
+## Cacerts
+
+wp-criipto-verify plugin includes cacert.pem. This is used for getting ssl handshake to work running localhost. This file can be overwritten as desired.
+
 ## Installation
 
 1. Download or clone this repository to the plugin folder in your wordpress project. Typicaly "[wordpress project name]"/wp-content/plugins.
@@ -19,7 +23,7 @@ wp-criipto-verify plugin is supported with wordpress <5.2.
 5. Go to applicaton tap, create a new application and follow the steps
 6. You should end op having an application looking this
 
-<img src="assets/gitHubImg/example1.png" alt="drawing" width="300"/> 
+<img src="assets/gitHubImg/example1.png" alt="drawing" width="300"/>
 
 7. Add the applications information from manage.criipto.id to criipto settings in wordpress
 
@@ -32,6 +36,7 @@ Add this shortcode to wordpress page. Guide to add shortcode to wordpress page [
 ```
 
 Supported parameters:
+
 <table>
     <tr>
         <th>Type</th>

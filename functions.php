@@ -26,18 +26,7 @@ function criipto_verify_openid_connect()
         get_option('criipto-verify-client-secret')
     );
 
-    /** 
-    * When working on localhost, https connection can fail. As a work around, set setVerifyHost and setVerifyPeer to false when
-    * $_SERVER['SERVER_NAME'] is equal localhost. 
-    */
-    if($_SERVER['SERVER_NAME'] == 'localhost'){
-        $setVerifyAuth = false;
-    } else {
-        $setVerifyAuth = true;
-    }
-
-    $oidc->setVerifyHost($setVerifyAuth);
-    $oidc->setVerifyPeer($setVerifyAuth);
+    $oidc->setCertPath($_SESSION['cacerts']);
 
     $oidc->setRedirectURL($sessionShortcodeArray['redirect_uri']);
 
@@ -45,7 +34,7 @@ function criipto_verify_openid_connect()
         $oidc->authenticate();
         $_SESSION['VerifiedClaims'] = JSON_encode($oidc->getVerifiedClaims());
         $_SESSION['sessionId'] = session_id();
-        echo "<script type='text/javascript'>window.parent.location.reload()</script>";
+        echo "<script type='text/javascript' src='".plugin_dir_url(__FILE__)."js/userLoggedInNotifier.js'></script>";
     } catch (OpenIDConnectClientException $e) {
         return "<div class='criipto-verify-error'>" . $e . "</div>";
     }
@@ -96,6 +85,7 @@ function criipto_verify_shortcode($atts)
         'afterLogOutRedirect' => $afterLogOutRedirect
     ), $atts, 'criipto-verify');
 
+    $_SESSION['cacerts'] =  plugin_dir_path( __FILE__ ).'cacerts/cacert.pem';
     $_SESSION['shortcode'] = json_encode($atts);
     $sessionShortcodeArray = json_decode($_SESSION['shortcode'], true);
     if ((isset($_GET['code']) && isset($_GET['state'])) || isset($_POST['id_token'])) {
