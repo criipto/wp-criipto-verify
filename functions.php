@@ -1,5 +1,4 @@
 <?php
-session_start();
 require __DIR__ . '/vendor/autoload.php';
 use Jumbojett\OpenIDConnectClient;
 
@@ -46,7 +45,7 @@ function criipto_verify_openid_connect()
 
 function criipto_verify_shortcode($atts)
 {
-
+    session_start();
     $response = wp_remote_get("https://" . get_option('criipto-verify-domain') . "/.well-known/openid-configuration");
     if (get_option('criipto-verify-domain') === '' || get_option('criipto-verify-domain') == null) {
         if (!wp_remote_retrieve_body($response)) {

@@ -3,12 +3,12 @@
  * Plugin Name: Login by Criipto
  * Plugin URL: https://docs.criipto.com/wordpress
  * Description: Login by Criipto Verify provides DK NemId login, NO/SE BankId login, FI Tupas, FI Mobiilivarmenne, FI All for all your sites.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Criipto
  * Author URI: https://criipto.com
  * Text Domain: wp-criipto
  */
-session_start();
+
 require_once 'functions.php';
 
 include('includes/settingsPage.php'); 
