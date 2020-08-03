@@ -91,6 +91,9 @@ function criipto_verify_shortcode($atts)
         criipto_verify_openid_connect();
     } else {
         if (!isset($_SESSION['sessionId'])) {
+            if(JSON_decode($_SESSION['shortcode'])->acr_values === "urn:grn:authn:no:bankid"){
+                header('Location: '.plugins_url('/requestAuth.php', __FILE__).'');
+            }
             return "
             <div id='criipto-verify-login'>
                 <iframe src='" . plugins_url('/requestAuth.php', __FILE__) . "' id='criipto-verify' title='Criipto-Verify' class='login-frame-" . substr($sessionShortcodeArray['acr_values'], strrpos($sessionShortcodeArray['acr_values'], ':') + 1) . "' allowfullscreen='true' scrolling='no' frameborder='0' class='hidden-frame'>
